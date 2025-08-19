@@ -1,24 +1,31 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+# from streamlit_option_menu import option_menu
+# from numerize.numerize import numerize
 
 # Configurando a páginas
 st.set_page_config(
     page_title="Dashboard de Salários na Área de Dados",
-    page_icon="📊",
+    page_icon=("img\icon-barra.png"),
     layout="wide",
 )
+
+
 # Lendo os dados do df
 df = pd.read_csv("dataframeFinal.csv")
 
-# Filtros
 
+
+# Filtros
 # Barra Lateral (Filtros)
-st.sidebar.header("🔍 Filtros")
+st.sidebar.image("logo.svg")
+st.sidebar.header("Selecione o Filtro")
 
 # Filtro de Ano
 anos_disponiveis = sorted(df['ano_trabalho'].unique())
-anos_selecionados = st.sidebar.multiselect("ano", anos_disponiveis, default=anos_disponiveis)
+anos_selecionados = st.sidebar.multiselect(
+    "Selecione o ano", anos_disponiveis, default=anos_disponiveis)
 
 # Filtro de Senioridade
 senioridades_disponiveis = sorted(df['nivel_experiencia'].unique())
@@ -83,6 +90,9 @@ with col_graf1:
             title="Top 10 cargos por salário médio",
             labels={'usd': 'Média salarial anual (USD)', 'cargo': ''}
         )
+              
+        grafico_cargos.update_traces(marker_color="#154C79")
+        
         grafico_cargos.update_layout(title_x=0.1, yaxis={'categoryorder':'total ascending'})
         st.plotly_chart(grafico_cargos, use_container_width=True)
     else:
@@ -97,6 +107,8 @@ with col_graf2:
             title="Distribuição de salários anuais",
             labels={'usd': 'Faixa salarial (USD)', 'count': ''}
         )
+
+        grafico_hist.update_traces(marker_color="#154C79")
         grafico_hist.update_layout(title_x=0.1)
         st.plotly_chart(grafico_hist, use_container_width=True)
     else:
@@ -142,4 +154,37 @@ with col_graf4:
 
 # Tabela de Dados Detalhados
 st.subheader("Dados Detalhados")
-st.dataframe(df_filtrado)
+def Home():
+    with st.expander("Tabela com os Dados"):
+        # todas as colunas selecionadas por padrão
+        default_cols = list(df_filtrado.columns)
+
+        showData = st.multiselect(
+            "Filtros de colunas:",
+            options=df_filtrado.columns,
+            default=default_cols
+        )
+
+        st.write(df_filtrado[showData])
+
+Home()
+
+
+# st.dataframe(df_filtrado)
+
+# def Home():
+#     with st.expander("Dados"):
+#         showData = st.multiselect('Filtros de colunas: ', df_filtrado.columns, default=[])
+#         st.write(df_filtrado[showData])
+
+# Home()
+
+
+#thema
+hide_st_style="""""
+<style>
+#MainMenu {visibility}
+footer {visibility}
+header {visibility}
+</style>
+"""
