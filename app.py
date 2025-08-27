@@ -7,15 +7,12 @@ import plotly.express as px
 # Configurando a páginas
 st.set_page_config(
     page_title="Dashboard de Salários na Área de Dados",
-    page_icon=("img\icon-barra.png"),
+    page_icon=("./img/icon-barra.png"),
     layout="wide",
 )
 
-
 # Lendo os dados do df
 df = pd.read_csv("dataframeFinal.csv")
-
-
 
 # Filtros
 # Barra Lateral (Filtros)
@@ -105,11 +102,12 @@ with col_graf2:
             x='usd',
             nbins=30,
             title="Distribuição de salários anuais",
-            labels={'usd': 'Faixa salarial (USD)', 'count': ''}
+            labels={'usd': 'Faixa salarial (USD)', 'Contagem': ''}
         )
-
+        grafico_hist.update_layout(bargap=0.1)
         grafico_hist.update_traces(marker_color="#154C79")
         grafico_hist.update_layout(title_x=0.1)
+
         st.plotly_chart(grafico_hist, use_container_width=True)
     else:
         st.warning("Nenhum dado para exibir no gráfico de distribuição.")
