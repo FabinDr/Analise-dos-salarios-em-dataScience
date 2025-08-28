@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
+import numpy as np
 # from streamlit_option_menu import option_menu
 # from numerize.numerize import numerize
 
@@ -49,6 +51,18 @@ df_filtrado = df[
 st.title("Dashboard de Análise de Salários na Área de Dados")
 st.markdown("Explore os dados salariais na área de dados nos últimos anos. Utilize os filtros à esquerda para refinar sua análise.")
 
+
+# Paleta de cores moderna
+colors = {
+    'primary': '#1f77b4',
+    'secondary': '#ff7f0e', 
+    'success': '#2ca02c',
+    'warning': '#d62728',
+    'info': '#9467bd',
+    'gradient': ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+}
+
+
 # --- Métricas Principais (KPIs) ---
 st.subheader("Métricas gerais (Salário anual em USD)")
 
@@ -95,6 +109,7 @@ with col_graf1:
     else:
         st.warning("Nenhum dado para exibir no gráfico de cargos.")
 
+
 with col_graf2:
     if not df_filtrado.empty:
         grafico_hist = px.histogram(
@@ -102,11 +117,27 @@ with col_graf2:
             x='usd',
             nbins=30,
             title="Distribuição de salários anuais",
-            labels={'usd': 'Faixa salarial (USD)', 'Contagem': ''}
+            labels={'usd': 'Faixa salarial (USD)', 'count': 'Contagem'}
         )
-        grafico_hist.update_layout(bargap=0.1)
-        grafico_hist.update_traces(marker_color="#154C79")
-        grafico_hist.update_layout(title_x=0.1)
+
+        grafico_hist.update_traces(
+            marker_color="#154C79",
+            hovertemplate='Faixa: $%{x:,.0f}<br>Contagem: %{y}<extra></extra>'
+        )
+
+        grafico_hist.update_layout(
+            bargap=0.2,  # espaçamento entre as barras
+            title_x=0.1,
+            margin=dict(l=40, r=40, t=60, b=40),
+            xaxis=dict(
+                title='Faixa salarial (USD)',
+                tickprefix='$',
+                tickformat=',.0f'
+            ),
+            yaxis=dict(title='Contagem'),
+            template="plotly_white",
+            height=420
+        )
 
         st.plotly_chart(grafico_hist, use_container_width=True)
     else:
