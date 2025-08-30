@@ -13,8 +13,7 @@ st.set_page_config(
 
 # Lendo os dados do @st.cache_data
 def carregar_dados():
-    return 
-pd.read_csv("dataframeFinal.csv")
+    return pd.read_csv("dataframeFinal.csv")
 
 df = carregar_dados()
 
